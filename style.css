@@ -6,7 +6,8 @@
   --bg-soft: #fff0f3;
   --white: #ffffff;
   --text: #590d22;
-  --shadow: 0 10px 40px rgba(255, 77, 109, 0.2);
+  --glass: rgba(255, 255, 255, 0.7);
+  --shadow: 0 8px 32px 0 rgba(255, 77, 109, 0.2);
 }
 
 * {
@@ -14,22 +15,25 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   background-color: var(--bg-soft);
   background-image: radial-gradient(#ffccd5 1px, transparent 1px);
-  background-size: 30px 30px;
+  background-size: 20px 20px;
   min-height: 100vh;
   color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  width: 100%;
 }
 
 .card-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -38,71 +42,110 @@ body {
   padding: 1.5rem;
 }
 
-/* --- Mobile Styles (Default) --- */
-
-.intro-text {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: fadeInDown 1s forwards;
-  line-height: 1.5;
+/* --- Content Wrapper --- */
+.content, .surprise-content {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
+/* --- Typography (Responsive) --- */
+.intro-text {
+  font-size: clamp(1.1rem, 5vw, 1.5rem);
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0;
+  animation: fadeInDown 1s ease forwards;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+.surprise-text {
+  font-size: clamp(1.5rem, 6vw, 2.8rem);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-delay: 1s;
+}
+
+/* --- Buttons --- */
 .reveal-btn {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  min-height: 50px; /* Touch-friendly */
+  font-size: clamp(1rem, 4vw, 1.3rem);
   font-weight: 800;
   color: white;
-  background: linear-gradient(45deg, var(--primary), var(--secondary));
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 8px 30px rgba(255, 77, 109, 0.3);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 100px;
+  box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.reveal-btn:active {
+  transform: scale(0.95);
+}
+
+/* --- Photos --- */
 .photo-gallery {
   display: flex;
-  flex-direction: column; /* Stacked on mobile */
+  flex-direction: column; /* Mobile-first: stacked */
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .photo-card {
-  width: 180px;
-  height: 240px;
+  width: min(250px, 80vw);
   background: white;
-  padding: 10px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  padding: 0.6rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
   border: 6px solid white;
-  overflow: hidden;
   opacity: 0;
-  transform: rotate(var(--rotation)) scale(0.8);
+  transform: rotate(calc(var(--rotation) / 2)) scale(0.9);
   animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   animation-delay: var(--delay);
 }
 
-.surprise-text {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1.3;
-  margin-top: 1rem;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: slideUp 1s ease forwards;
-  animation-delay: 1.2s;
+.photo-card img {
+  width: 100%; /* Responsive: max-width 100% inherited */
+  height: auto;
+  max-width: 100%;
+  display: block;
+  border-radius: 0.5rem;
+  object-fit: cover;
 }
 
-/* Animations */
+/* --- Links --- */
+.back-link {
+  margin-top: 1rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: 1.8s;
+}
+
+/* --- Animations --- */
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -110,83 +153,41 @@ body {
   to { opacity: 1; transform: rotate(var(--rotation)) scale(1); }
 }
 
-@keyframes slideUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes fadeIn {
   to { opacity: 1; }
 }
 
-.photo-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-}
+/* --- Enhancements for Larger Screens --- */
 
-.back-link {
-  display: inline-block;
-  margin-top: 2rem;
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  opacity: 0;
-  animation: fadeIn 0.5s ease forwards;
-  animation-delay: 1.8s;
-}
-
-/* --- Tablet Styles --- */
+/* Tablet (768px+) */
 @media (min-width: 768px) {
-  .intro-text {
-    font-size: 1.4rem;
-  }
-
-  .reveal-btn {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.4rem;
-  }
-
   .photo-gallery {
     flex-direction: row; /* Side by side on tablet */
-    gap: 2.5rem;
+    justify-content: center;
+    gap: 3rem;
   }
-
+  
   .photo-card {
-    width: 200px;
-    height: 270px;
-  }
-
-  .surprise-text {
-    font-size: 2.2rem;
-  }
-}
-
-/* --- Laptop / Desktop Styles --- */
-@media (min-width: 1024px) {
-  .intro-text {
-    font-size: 1.7rem;
-    margin-bottom: 3rem;
-  }
-
-  .reveal-btn {
-    font-size: 1.6rem;
-    padding: 1.4rem 3rem;
-  }
-
-  .photo-card {
-    width: 250px;
-    height: 330px;
+    width: 220px;
     border-width: 10px;
   }
-
-  .surprise-text {
-    font-size: 3rem;
-  }
-
-  .back-link {
-    font-size: 1.1rem;
+  
+  .reveal-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(255, 77, 109, 0.5);
   }
 }
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .photo-card {
+    width: 280px;
+  }
+  
+  .intro-text {
+    max-width: 700px;
+  }
+}
+
+
 
