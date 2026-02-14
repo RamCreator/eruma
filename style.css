@@ -102,28 +102,39 @@ body {
   align-items: center;
   gap: 1.5rem;
   width: 100%;
+  flex-wrap: wrap; /* Allow wrapping on larger mobile/tablets */
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .photo-card {
-  width: min(250px, 80vw);
+  width: min(240px, 80vw);
+  aspect-ratio: 4/5; /* Uniform shape for all photos */
   background: white;
   padding: 0.6rem;
   border-radius: 1rem;
   box-shadow: var(--shadow);
-  border: 6px solid white;
+  border: 5px solid white;
   opacity: 0;
   transform: rotate(calc(var(--rotation) / 2)) scale(0.9);
   animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   animation-delay: var(--delay);
+  display: flex; /* Fix for inner image alignment */
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.photo-card:hover {
+  transform: rotate(0deg) scale(1.05) !important;
+  z-index: 10;
 }
 
 .photo-card img {
-  width: 100%; /* Responsive: max-width 100% inherited */
-  height: auto;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
   display: block;
   border-radius: 0.5rem;
-  object-fit: cover;
+  object-fit: cover; /* Ensures all images fill the uniform box */
 }
 
 /* --- Links --- */
@@ -132,11 +143,18 @@ body {
   color: var(--primary);
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.9rem;
-  padding: 0.5rem;
+  font-size: 0.95rem;
+  padding: 0.8rem 1.5rem;
   opacity: 0;
   animation: fadeIn 0.5s ease forwards;
   animation-delay: 1.8s;
+  transition: all 0.3s ease;
+  border-radius: 50px;
+}
+
+.back-link:hover {
+  background: rgba(255, 77, 109, 0.05);
+  color: var(--accent);
 }
 
 /* --- Animations --- */
@@ -159,29 +177,24 @@ body {
 
 /* --- Enhancements for Larger Screens --- */
 
-/* Tablet (768px+) */
-@media (min-width: 768px) {
+/* Tablet & Up (600px+) */
+@media (min-width: 600px) {
   .photo-gallery {
-    flex-direction: row; /* Side by side on tablet */
-    justify-content: center;
-    gap: 3rem;
+    flex-direction: row; /* Row for tablets and desktops */
+    gap: 2rem;
   }
   
   .photo-card {
-    width: 220px;
-    border-width: 10px;
-  }
-  
-  .reveal-btn:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(255, 77, 109, 0.5);
+    width: 200px;
+    border-width: 8px;
   }
 }
 
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
   .photo-card {
-    width: 280px;
+    width: 260px;
+    border-width: 10px;
   }
   
   .intro-text {
